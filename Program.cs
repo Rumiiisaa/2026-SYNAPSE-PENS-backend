@@ -1,40 +1,54 @@
 using Microsoft.EntityFrameworkCore;
 using SynapsePENS.Api.Data;
-// Pastikan package ini sudah terinstall
-using Npgsql.EntityFrameworkCore.PostgreSQL; 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Tambahkan dukungan untuk Controller (Sudah benar)
+// 1. Tambahkan dukungan untuk Controller
 builder.Services.AddControllers();
 
 // 2. Tambahkan Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 3. Konfigurasi Database PostgreSQL (Sudah benar)
+// 3. TAMBAHKAN CORS (PENTING untuk Frontend)
+// Ini agar browser tidak memblokir permintaan dari React/Vue/Flutter nanti
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
+// 4. Konfigurasi Database PostgreSQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
-// 4. Konfigurasi HTTP Request Pipeline
+// 5. Konfigurasi HTTP Request Pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    // Baris ini memastikan UI Swagger muncul saat aplikasi dijalankan
     app.UseSwaggerUI(c => 
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "SynapsePENS API V1");
-        c.RoutePrefix = string.Empty; // Membuat Swagger muncul langsung di halaman utama (localhost:port/)
+        c.RoutePrefix = string.Empty; // Swagger muncul di localhost:port/
     });
 }
 
+// URUTAN INI SANGAT PENTING:
 app.UseHttpsRedirection();
+
+// 6. AKTIFKAN CORS (Harus di atas UseAuthorization)
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
-// 5. MAP CONTROLLERS: Ini baris paling krusial agar file di folder 'Controllers' dikenali
+// 7. Map Controllers
 app.MapControllers();
 
 app.Run();
