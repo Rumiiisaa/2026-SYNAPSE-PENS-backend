@@ -13,15 +13,29 @@ public class BookingsController : ControllerBase {
 
     public BookingsController(ApplicationDbContext context) => _context = context;
 
+    // 1. GET ALL (Dengan Include agar nama muncul)
     [HttpGet]
-    public async Task<IActionResult> GetAll() => Ok(await _context.Bookings.ToListAsync());
+    public async Task<IActionResult> GetAll() {
+        var bookings = await _context.Bookings
+            .Include(b => b.Student)
+            .Include(b => b.Room)
+            .ToListAsync();
+        return Ok(bookings);
+    }
 
-    [HttpGet("students")]
-    public async Task<IActionResult> GetStudents() => Ok(await _context.Students.ToListAsync());
+    // 2. GET BY ID (Untuk melihat detail peminjaman)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id) {
+        var booking = await _context.Bookings
+            .Include(b => b.Student)
+            .Include(b => b.Room)
+            .FirstOrDefaultAsync(b => b.Id == id);
 
-    [HttpGet("rooms")]
-    public async Task<IActionResult> GetRooms() => Ok(await _context.Rooms.ToListAsync());
+        if (booking == null) return NotFound("Data peminjaman tidak ditemukan.");
+        return Ok(booking);
+    }
 
+    // 3. POST (Tetap sama, sudah benar menggunakan DTO)
     [HttpPost]
     public async Task<IActionResult> Create(BookingRequestDto request) {
         var booking = new Booking {
@@ -32,6 +46,38 @@ public class BookingsController : ControllerBase {
         };
         _context.Bookings.Add(booking);
         await _context.SaveChangesAsync();
-        return Ok(booking);
+        return CreatedAtAction(nameof(GetById), new { id = booking.Id }, booking);
     }
+
+    // 4. PUT (Untuk Mengubah data peminjaman)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, BookingRequestDto request) {
+        var booking = await _context.Bookings.FindAsync(id);
+        if (booking == null) return NotFound();
+
+        booking.StudentId = request.StudentId;
+        booking.RoomId = request.RoomId;
+        booking.Purpose = request.Purpose;
+
+        await _context.SaveChangesAsync();
+        return Ok(new { Message = "Data berhasil diperbarui", Data = booking });
+    }
+
+    // 5. DELETE (Untuk Menghapus data peminjaman)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id) {
+        var booking = await _context.Bookings.FindAsync(id);
+        if (booking == null) return NotFound();
+
+        _context.Bookings.Remove(booking);
+        await _context.SaveChangesAsync();
+        return Ok(new { Message = "Data peminjaman berhasil dihapus" });
+    }
+
+    // Helper Endpoints untuk Dropdown di Frontend
+    [HttpGet("students")]
+    public async Task<IActionResult> GetStudents() => Ok(await _context.Students.ToListAsync());
+
+    [HttpGet("rooms")]
+    public async Task<IActionResult> GetRooms() => Ok(await _context.Rooms.ToListAsync());
 }
