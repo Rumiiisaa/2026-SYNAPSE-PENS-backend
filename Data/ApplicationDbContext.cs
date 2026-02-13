@@ -16,7 +16,7 @@ public class ApplicationDbContext : DbContext {
         var seedDate = new DateTime(2026, 2, 14, 0, 0, 0, DateTimeKind.Utc);
 
         modelBuilder.Entity<Student>().HasData(
-            new Student { Id = 1, Name = "Mahasiswa PENS", NRP = "2110191001" }
+            new Student { Id = 1, Name = "Akari Kanzoo Triputra", NRP = "3124600004" }
         );
 
         modelBuilder.Entity<Room>().HasData(
