@@ -9,27 +9,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace SynapsePENS.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialBookingSystem : Migration
+    public partial class InitialFinalCleanConfig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Bookings",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    StudentId = table.Column<int>(type: "integer", nullable: false),
-                    RoomId = table.Column<int>(type: "integer", nullable: false),
-                    BookingDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Purpose = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bookings", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Rooms",
                 columns: table => new
@@ -58,19 +42,58 @@ namespace SynapsePENS.Api.Migrations
                     table.PrimaryKey("PK_Students", x => x.Id);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Bookings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    StudentId = table.Column<int>(type: "integer", nullable: false),
+                    RoomId = table.Column<int>(type: "integer", nullable: false),
+                    BookingDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Purpose = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bookings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Rooms_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Rooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Rooms",
                 columns: new[] { "Id", "Capacity", "RoomName" },
                 values: new object[,]
                 {
                     { 1, 20, "Ruang Robotik" },
-                    { 2, 100, "Aula Gedung TC" }
+                    { 2, 100, "Aula Gedung TC" },
+                    { 3, 30, "Lab Data Science" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Students",
                 columns: new[] { "Id", "NRP", "Name" },
-                values: new object[] { 1, "2110191001", "Mahasiswa PENS" });
+                values: new object[] { 1, "3124600004", "Akari Kanzoo Triputra" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_RoomId",
+                table: "Bookings",
+                column: "RoomId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_StudentId",
+                table: "Bookings",
+                column: "StudentId");
         }
 
         /// <inheritdoc />

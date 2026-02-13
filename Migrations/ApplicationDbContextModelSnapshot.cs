@@ -45,6 +45,10 @@ namespace SynapsePENS.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("StudentId");
+
                     b.ToTable("Bookings");
                 });
 
@@ -79,6 +83,12 @@ namespace SynapsePENS.Api.Migrations
                             Id = 2,
                             Capacity = 100,
                             RoomName = "Aula Gedung TC"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Capacity = 30,
+                            RoomName = "Lab Data Science"
                         });
                 });
 
@@ -109,6 +119,25 @@ namespace SynapsePENS.Api.Migrations
                             NRP = "3124600004",
                             Name = "Akari Kanzoo Triputra"
                         });
+                });
+
+            modelBuilder.Entity("SynapsePENS.Api.Entities.Booking", b =>
+                {
+                    b.HasOne("SynapsePENS.Api.Entities.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SynapsePENS.Api.Entities.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+
+                    b.Navigation("Student");
                 });
 #pragma warning restore 612, 618
         }
