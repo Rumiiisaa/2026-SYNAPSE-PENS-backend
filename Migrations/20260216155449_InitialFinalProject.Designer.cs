@@ -12,8 +12,8 @@ using SynapsePENS.Api.Data;
 namespace SynapsePENS.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260213190009_InitialFinalCleanConfig")]
-    partial class InitialFinalCleanConfig
+    [Migration("20260216155449_InitialFinalProject")]
+    partial class InitialFinalProject
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,8 +33,11 @@ namespace SynapsePENS.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("BookingDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Purpose")
                         .IsRequired()
@@ -42,6 +45,15 @@ namespace SynapsePENS.Api.Migrations
 
                     b.Property<int>("RoomId")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("Menunggu Persetujuan");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
@@ -78,20 +90,80 @@ namespace SynapsePENS.Api.Migrations
                         new
                         {
                             Id = 1,
-                            Capacity = 20,
-                            RoomName = "Ruang Robotik"
+                            Capacity = 30,
+                            RoomName = "C 101"
                         },
                         new
                         {
                             Id = 2,
-                            Capacity = 100,
-                            RoomName = "Aula Gedung TC"
+                            Capacity = 30,
+                            RoomName = "C 102"
                         },
                         new
                         {
                             Id = 3,
                             Capacity = 30,
-                            RoomName = "Lab Data Science"
+                            RoomName = "C 103"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Capacity = 30,
+                            RoomName = "C 104"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Capacity = 30,
+                            RoomName = "C 105"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Capacity = 30,
+                            RoomName = "C 106"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Capacity = 30,
+                            RoomName = "C 201"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Capacity = 30,
+                            RoomName = "C 202"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Capacity = 30,
+                            RoomName = "C 203"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Capacity = 30,
+                            RoomName = "C 204"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Capacity = 30,
+                            RoomName = "C 205"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Capacity = 120,
+                            RoomName = "SAW-03.06"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Capacity = 120,
+                            RoomName = "SAW-06.08"
                         });
                 });
 
@@ -114,14 +186,6 @@ namespace SynapsePENS.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Students");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            NRP = "3124600004",
-                            Name = "Akari Kanzoo Triputra"
-                        });
                 });
 
             modelBuilder.Entity("SynapsePENS.Api.Entities.Booking", b =>

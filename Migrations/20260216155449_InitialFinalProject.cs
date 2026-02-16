@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace SynapsePENS.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialFinalCleanConfig : Migration
+    public partial class InitialFinalProject : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,8 +50,11 @@ namespace SynapsePENS.Api.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     StudentId = table.Column<int>(type: "integer", nullable: false),
                     RoomId = table.Column<int>(type: "integer", nullable: false),
-                    BookingDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Purpose = table.Column<string>(type: "text", nullable: false)
+                    StartTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Purpose = table.Column<string>(type: "text", nullable: false),
+                    Status = table.Column<string>(type: "text", nullable: false, defaultValue: "Menunggu Persetujuan"),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,15 +78,20 @@ namespace SynapsePENS.Api.Migrations
                 columns: new[] { "Id", "Capacity", "RoomName" },
                 values: new object[,]
                 {
-                    { 1, 20, "Ruang Robotik" },
-                    { 2, 100, "Aula Gedung TC" },
-                    { 3, 30, "Lab Data Science" }
+                    { 1, 30, "C 101" },
+                    { 2, 30, "C 102" },
+                    { 3, 30, "C 103" },
+                    { 4, 30, "C 104" },
+                    { 5, 30, "C 105" },
+                    { 6, 30, "C 106" },
+                    { 7, 30, "C 201" },
+                    { 8, 30, "C 202" },
+                    { 9, 30, "C 203" },
+                    { 10, 30, "C 204" },
+                    { 11, 30, "C 205" },
+                    { 12, 120, "SAW-03.06" },
+                    { 13, 120, "SAW-06.08" }
                 });
-
-            migrationBuilder.InsertData(
-                table: "Students",
-                columns: new[] { "Id", "NRP", "Name" },
-                values: new object[] { 1, "3124600004", "Akari Kanzoo Triputra" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_RoomId",

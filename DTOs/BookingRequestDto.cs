@@ -1,16 +1,10 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace SynapsePENS.Api.DTOs;
-
-public class BookingRequestDto
+namespace SynapsePENS.Api.DTOs // Pastikan namespace ini benar sesuai folder
 {
-    [Required(ErrorMessage = "StudentId wajib diisi.")]
+    public class BookingRequestDto {
     public int StudentId { get; set; }
-
-    [Required(ErrorMessage = "RoomId wajib diisi.")]
     public int RoomId { get; set; }
-
-    [Required(ErrorMessage = "Tujuan peminjaman (Purpose) tidak boleh kosong.")]
-    [StringLength(100, MinimumLength = 5, ErrorMessage = "Purpose minimal 5 karakter dan maksimal 100 karakter.")]
     public string Purpose { get; set; } = string.Empty;
+    public DateTime StartTime { get; set; } // Pastikan ini ada
+    public DateTime EndTime { get; set; }   // Pastikan ini ada
+    }
 }
