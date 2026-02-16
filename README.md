@@ -28,6 +28,5 @@ SynapsePENS.Api/
 1. Clone repository ini.
 2. Pastikan PostgreSQL berjalan dan sesuaikan `ConnectionStrings` di `appsettings.json`.
 3. Jalankan perintah di Terminal:
-   ```bash
    dotnet ef database update
    dotnet run
