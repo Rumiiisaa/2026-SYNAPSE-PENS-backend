@@ -9,7 +9,7 @@ Sistem Informasi Peminjaman Ruangan berbasis ASP.NET Core dan PostgreSQL. Projec
 - **Swagger Open API**: Dokumentasi endpoint interaktif.
 
 ## 🛠️ Tech Stack
-- **Framework**: .NET 8 Web API
+- **Framework**: .NET 10 Web API
 - **Database**: PostgreSQL
 - **ORM**: Entity Framework Core
 
